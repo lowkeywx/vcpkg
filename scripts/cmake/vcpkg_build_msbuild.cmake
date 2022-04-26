@@ -109,7 +109,7 @@ function(vcpkg_build_msbuild)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
-        list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
+        # list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
     endif()
 
     if(arg_USE_VCPKG_INTEGRATION)
