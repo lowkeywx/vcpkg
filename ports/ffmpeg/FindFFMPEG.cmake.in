@@ -31,6 +31,10 @@ include(CMakeFindDependencyMacro)
 
 if(NOT FFMPEG_FOUND)
 
+add_library(FFMPEG::ffmpeg STATIC IMPORTED)
+set(FFMPEG_LIBRARIES_DEBUG_SET)
+set(FFMPEG_LIBRARIES_RELEASE_SET)
+
 # Compute the installation path relative to this file.
 get_filename_component(SEARCH_PATH "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(SEARCH_PATH "${SEARCH_PATH}" PATH)
@@ -78,7 +82,9 @@ macro(FFMPEG_FIND varname shortname headername)
   endif()
   if(NOT FFMPEG_${varname}_LIBRARY)
     find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${SEARCH_PATH}/lib/ NO_DEFAULT_PATH)
+    set(FFMPEG_${varname}_LIBRARY_RELEASE_COPY ${FFMPEG_${varname}_LIBRARY_RELEASE})
     find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname}d ${shortname} PATHS ${SEARCH_PATH}/debug/lib/ NO_DEFAULT_PATH)
+    set(FFMPEG_${varname}_LIBRARY_DEBUG_COPY ${FFMPEG_${varname}_LIBRARY_DEBUG})
     get_filename_component(FFMPEG_${varname}_LIBRARY_RELEASE_DIR ${FFMPEG_${varname}_LIBRARY_RELEASE} DIRECTORY)
     get_filename_component(FFMPEG_${varname}_LIBRARY_DEBUG_DIR ${FFMPEG_${varname}_LIBRARY_DEBUG} DIRECTORY)
     select_library_configurations(FFMPEG_${varname})
@@ -89,6 +95,9 @@ macro(FFMPEG_FIND varname shortname headername)
     list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_${varname}_INCLUDE_DIRS})
     list(APPEND FFMPEG_LIBRARIES ${FFMPEG_${varname}_LIBRARY})
     list(APPEND FFMPEG_LIBRARY_DIRS ${FFMPEG_${varname}_LIBRARY_RELEASE_DIR} ${FFMPEG_${varname}_LIBRARY_DEBUG_DIR})
+
+    list(APPEND FFMPEG_LIBRARIES_RELEASE_SET ${FFMPEG_${varname}_LIBRARY_RELEASE_COPY})
+    list(APPEND FFMPEG_LIBRARIES_DEBUG_SET ${FFMPEG_${varname}_LIBRARY_DEBUG_COPY})
   endif()
 endmacro(FFMPEG_FIND)
 
@@ -150,6 +159,9 @@ if (FFMPEG_libavutil_FOUND)
   if(FFMPEG_DEPS_LIBRARY_RELEASE OR FFMPEG_DEPS_LIBRARY_DEBUG)
     select_library_configurations(FFMPEG_DEPS)
     list(APPEND FFMPEG_LIBRARIES ${FFMPEG_DEPS_LIBRARY})
+
+    list(APPEND FFMPEG_LIBRARIES_RELEASE_SET ${FFMPEG_DEPS_LIBRARY})
+    list(APPEND FFMPEG_LIBRARIES_DEBUG_SET ${FFMPEG_DEPS_LIBRARY})
   endif()
 
   set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
