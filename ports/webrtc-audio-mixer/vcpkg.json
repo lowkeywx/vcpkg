@@ -1,0 +1,14 @@
+{
+  "name": "webrtc-audio-mixer",
+  "version": "1.0.0",
+  "port-version": 1,
+  "description": "",
+  "homepage": "tosee.cn",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

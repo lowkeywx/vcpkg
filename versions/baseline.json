@@ -7436,6 +7436,10 @@
       "baseline": "5.4.0",
       "port-version": 1
     },
+    "webrtc-audio-mixer": {
+      "baseline": "1.0.0",
+      "port-version": 1
+    },
     "webrtc-audio-process": {
       "baseline": "1.0.0",
       "port-version": 1
