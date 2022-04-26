@@ -305,11 +305,22 @@ function(vcpkg_configure_make)
 
     set(configure_env "V=1")
     # Pre-processing windows configure requirements
-    if (VCPKG_TARGET_IS_WINDOWS)
-        if(CMAKE_HOST_WIN32)
-            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
+    if(CMAKE_HOST_WIN32)
+        list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
+        set(append_env)
+        if(arg_USE_WRAPPERS)
+            set(append_env ";${MSYS_ROOT}/usr/share/automake-1.16")
+            string(APPEND append_env ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
         endif()
+        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        string(REPLACE ";$ENV{SystemRoot}\\system32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
+        set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
+    endif()
+    if (VCPKG_TARGET_IS_WINDOWS)
+
         if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
@@ -331,18 +342,7 @@ function(vcpkg_configure_make)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
-        if(CMAKE_HOST_WIN32)
-            set(append_env)
-            if(arg_USE_WRAPPERS)
-                set(append_env ";${MSYS_ROOT}/usr/share/automake-1.16")
-                string(APPEND append_env ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
-            endif()
-            # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-            string(REPLACE ";$ENV{SystemRoot}\\System32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-            string(REPLACE ";$ENV{SystemRoot}\\system32;" "${append_env};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-            set(ENV{PATH} "${NEWPATH}")
-            set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
-        endif()
+
 
         # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
         set(progs VCPKG_DETECTED_CMAKE_C_COMPILER VCPKG_DETECTED_CMAKE_CXX_COMPILER VCPKG_DETECTED_CMAKE_AR
