@@ -1,16 +1,10 @@
+# 保存CMAKE_MODULE路径
+set(LIBUV_CMAKE_MODULE_PATH_STORY ${CMAKE_MODULE_PATH})
+# 设置CMAKE_MODULE路径到当前目录
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+cmake_policy(SET CMP0012 NEW)
+# 查找Findlibuv.cmake
 _find_package(${ARGS})
-
-if(WIN32)
-    list(APPEND LibUV_LIBRARIES iphlpapi psapi shell32 userenv ws2_32)
-    if(TARGET LibUV::LibUV)
-        set_property(TARGET LibUV::LibUV APPEND PROPERTY INTERFACE_LINK_LIBRARIES iphlpapi psapi shell32 userenv ws2_32)
-    endif()
-endif()
-include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-list(APPEND LibUV_LIBRARIES Threads::Threads)
-if(TARGET LibUV::LibUV)
-    set_property(TARGET LibUV::LibUV APPEND PROPERTY INTERFACE_LINK_LIBRARIES Threads::Threads)
-endif()
-
-
+# 恢复之前的CMAKE_MODULE路径
+set(CMAKE_MODULE_PATH ${LIBUV_CMAKE_MODULE_PATH_STORY})
