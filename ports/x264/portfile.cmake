@@ -100,7 +100,7 @@ if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     set(ENV{CC} "${X264_USE_CC}")
     #arm架构需要借助gas-preprocessor配置汇编命令
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)")
-        set(ENV{AS} "${SOURCE_PATH}/tools/gas-preprocessor.pl ${ASM_OPTION} -- $ENV{CC} $ENV{CFLAGS} -arch ${X264_ARCH}")        
+        set(ENV{AS} "${SOURCE_PATH}/tools/gas-preprocessor.pl ${ASM_OPTION} -- $ENV{CC} $ENV{CFLAGS} -arch ${X264_ARCH} ${VCPKG_DETECTED_CMAKE_C_FLAGS}")        
     endif()
 
 endif()
