@@ -497,6 +497,7 @@ endif()
 if(VCPKG_TARGET_IS_IOS)
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x64|x86)$")
+        set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
         set(IOS_SDK_NAME "iphonesimulator")
     else()
         set(IOS_SDK_NAME "iphoneos")
