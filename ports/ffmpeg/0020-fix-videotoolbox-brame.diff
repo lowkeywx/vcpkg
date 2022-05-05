@@ -1,0 +1,25 @@
+diff --git a/libavcodec/videotoolboxenc.c b/libavcodec/videotoolboxenc.c
+index 8a02d3d1a0..7f3950df46 100644
+--- a/libavcodec/videotoolboxenc.c
++++ b/libavcodec/videotoolboxenc.c
+@@ -1393,7 +1393,6 @@ static int vtenc_configure_encoder(AVCodecContext *avctx)
+     }
+ 
+     vtctx->codec_id = avctx->codec_id;
+-    avctx->max_b_frames = 16;
+ 
+     if (vtctx->codec_id == AV_CODEC_ID_H264) {
+         vtctx->get_param_set_func = CMVideoFormatDescriptionGetH264ParameterSetAtIndex;
+@@ -1512,7 +1511,11 @@ static av_cold int vtenc_init(AVCodecContext *avctx)
+     if (!status && has_b_frames_cfbool) {
+         //Some devices don't output B-frames for main profile, even if requested.
+         // HEVC has b-pyramid
+-        vtctx->has_b_frames = (CFBooleanGetValue(has_b_frames_cfbool) && avctx->codec_id == AV_CODEC_ID_HEVC) ? 2 : 1;
++        if(CFBooleanGetValue(has_b_frames_cfbool)){
++            vtctx->has_b_frames = avctx->codec_id == AV_CODEC_ID_HEVC ? 2 : 1;
++        }else{
++            vtctx->has_b_frames = 0;
++        }
+         CFRelease(has_b_frames_cfbool);
+     }
+     avctx->has_b_frames = vtctx->has_b_frames;
