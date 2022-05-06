@@ -74,10 +74,6 @@ if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
 
         if((NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^x" AND VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^x") OR 
         (NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm" AND VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^arm"))
-            #交叉编译需要设置host
-            if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                list(APPEND OPTIONS "--disable-asm")
-            endif()
             execute_process(COMMAND xcodebuild -version -sdk macosx Path
             OUTPUT_VARIABLE X264_USE_ISYSROOT
             ERROR_QUIET
