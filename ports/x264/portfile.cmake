@@ -10,6 +10,13 @@ vcpkg_from_github(
         "uwp-cflags.patch"
 )
 
+if("gpl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-gpl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-gpl")
+endif()
+
+
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_add_to_path(${NASM_EXE_PATH})
@@ -138,8 +145,9 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
-        --enable-debug
         --disable-cli
+    OPTIONS_DEBUG
+        --enable-debug
 )
 
 vcpkg_install_make()

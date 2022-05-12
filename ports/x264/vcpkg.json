@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "gpl": {
+      "description": "Build the gpl feature."
+    }
+  }
 }
