@@ -52,7 +52,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
@@ -530,8 +530,8 @@ if(VCPKG_TARGET_IS_IOS)
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(OPTIONS_CROSS "${OPTIONS_CROSS} --extra-cflags=-mios-version-min=8.0 --extra-cflags=-fembed-bitcode")
-        set(OPTIONS_CROSS "${OPTIONS_CROSS} --extra-ldflags=-mios-version-min=8.0 --extra-ldflags=-fembed-bitcode")
+        set(OPTIONS_CROSS "${OPTIONS_CROSS} --extra-cflags=-mios-version-min=9.0 --extra-cflags=-fembed-bitcode")
+        set(OPTIONS_CROSS "${OPTIONS_CROSS} --extra-ldflags=-mios-version-min=9.0 --extra-ldflags=-fembed-bitcode")
     endif()
 
 endif(VCPKG_TARGET_IS_IOS)
@@ -587,8 +587,8 @@ if(VCPKG_TARGET_IS_UWP)
     set(OPTIONS_CROSS " --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-set(OPTIONS_DEBUG "--debug") # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
-set(OPTIONS_RELEASE "")
+set(OPTIONS_DEBUG "--enable-debug") # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_RELEASE "--disable-debug")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
