@@ -32,7 +32,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL ssh://git@team.tosee.cn:61984/source/AudioMixer.git
-    REF d0033810d50d6f5b2d4129c9de4a0811c511f76e #2021-4-15
+    REF a9f8d3406356d6c9474a0117c986dde702b52e40
     FETCH_REF feature/rtc_sdk
     HEAD_REF feature/rtc_sdk
 )
